@@ -19,6 +19,28 @@ def findposition(grid, h, w):
             if g != 0 and b != 0:
                 break
     return g, b
+def player(grid_data, b):
+    while True:
+        cmd = (input('Enter the dir : ')).lower()
+        if len(cmd) == 0:
+            print('Empty Input')
+            continue
+        if cmd[0] == 'l' or (cmd[0] == 'a' and len(cmd) == 1):
+            move = (0, -1)
+        elif cmd[0] == 'r' or (cmd[0] == 'd' and len(cmd) == 1):
+            move = (0, 1)
+        elif cmd[0] == 'u' or (cmd[0] == 'w' and len(cmd) == 1):
+            move = (-1, 0)
+        elif cmd[0] == 'd' or (cmd[0] == 's' and len(cmd) == 1):
+            move = (1, 0)
+        predict = (abs(b[0] + move[0]), abs(b[1] + move[1]))
+        if grid_data[predict[0]][predict[1]] == 1:
+            b = predict
+            break
+        else:
+            print('That is wall')
+            continue
+    return b
 h, w = (int(i) for i in input().strip().split())
 grid = [list(input()) for i in range(h)]
 #Enable This if you want Auto cover
@@ -35,28 +57,7 @@ w += 2
 grid_data = bp.array([1 if each != '0' else 0 for i in grid for each in i])
 grid_data = grid_data.reshape(h,w)
 g, b = findposition(grid, h, w)
-for i in grid_data:
-    print(*i)
-for i in grid:
-    print(*i)
 while g != b:
-    cmd = (input('Enter the dir : ')).lower()
-    if len(cmd) == 0:
-        print('Empty Input')
-        continue
-
-    if cmd[0] == 'l' or (cmd[0] == 'a' and len(cmd) == 1):
-        move = (0, -1)
-    elif cmd[0] == 'r' or (cmd[0] == 'd' and len(cmd) == 1):
-        move = (0, 1)
-    elif cmd[0] == 'u' or (cmd[0] == 'w' and len(cmd) == 1):
-        move = (-1, 0)
-    elif cmd[0] == 'd' or (cmd[0] == 's' and len(cmd) == 1):
-        move = (1, 0)
-    predict = (abs(b[0] + move[0]), abs(b[1] + move[1]))
-    if grid_data[predict[0]][predict[1]] == 1:
-        b = predict
-        printboard(grid_data, b, g, h, w)
-    else:
-        print('That is wall')
+    printboard(grid_data, b, g, h, w)
+    b = player(grid_data, b)
 print('Win!')
